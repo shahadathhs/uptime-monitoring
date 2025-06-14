@@ -1,8 +1,8 @@
 // dependencies
-const data = require("../../lib/data");
-const { hash } = require("../../helpers/utilities");
-const { createRandomString } = require("../../helpers/utilities");
-const { parseJSON } = require("../../helpers/utilities");
+const data = require("../lib/data");
+const { hash } = require("../helpers/utilities");
+const { createRandomString } = require("../helpers/utilities");
+const { parseJSON } = require("../helpers/utilities");
 
 // module scaffolding
 const handler = {};

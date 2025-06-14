@@ -1,7 +1,7 @@
 // dependencies
-const data = require("../../lib/data");
-const { hash } = require("../../helpers/utilities");
-const { parseJSON } = require("../../helpers/utilities");
+const data = require("../lib/data");
+const { hash } = require("../helpers/utilities");
+const { parseJSON } = require("../helpers/utilities");
 const tokenHandler = require("./tokenHandler");
 
 // module scaffolding
