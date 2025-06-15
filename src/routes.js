@@ -1,9 +1,9 @@
-// dependencies
-const { sampleHandler } = require('./app/handlers/sampleHandler');
-const { userHandler } = require('./app/handlers/userHandler');
-const { tokenHandler } = require('./app/handlers/tokenHandler');
-const { checkHandler } = require('./app/handlers/checkHandler');
+import { checkHandler } from './app/handlers/checkHandler.js';
+import { sampleHandler } from './app/handlers/sampleHandler.js';
+import { tokenHandler } from './app/handlers/tokenHandler.js';
+import { userHandler } from './app/handlers/userHandler.js';
 
+// route definitions
 const routes = {
   sample: sampleHandler,
   user: userHandler,
@@ -11,4 +11,5 @@ const routes = {
   check: checkHandler,
 };
 
-module.exports = routes;
+// export routes
+export default routes;

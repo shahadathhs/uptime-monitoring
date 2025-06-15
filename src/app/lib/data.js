@@ -1,109 +1,77 @@
-// dependencies
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// module scaffolding
-const lib = {};
+// Get __dirname 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// base directory of the data folder
-lib.basedir = path.join(__dirname, '/../.data/');
+// Base directory of the data folder
+const baseDir = path.join(__dirname, '/../.data/');
 
-// write data to file
-lib.create = (dir, file, data, callback) => {
-  // open file for writing
-  fs.open(`${lib.basedir + dir}/${file}.json`, 'wx', (err, fileDescriptor) => {
-    if (!err && fileDescriptor) {
-      // convert data to stirng
-      const stringData = JSON.stringify(data);
+// Utility function to build file path
+const getFilePath = (dir, file) => path.join(baseDir, dir, `${file}.json`);
 
-      // write data to file and then close it
-      fs.writeFile(fileDescriptor, stringData, (err2) => {
-        if (!err2) {
-          fs.close(fileDescriptor, (err3) => {
-            if (!err3) {
-              callback(false);
-            } else {
-              callback('Error closing the new file!');
-            }
-          });
-        } else {
-          callback('Error writing to new file!');
-        }
-      });
-    } else {
-      callback('There was an error, file may already exists!');
+// File system utility module
+const fileLib = {
+  // Create a new file
+  async create(dir, file, data) {
+    const filePath = getFilePath(dir, file);
+    try {
+      const handle = await fs.open(filePath, 'wx');
+      await handle.writeFile(JSON.stringify(data));
+      await handle.close();
+    } catch (err) {
+      throw new Error(`Create failed: ${err.message}`);
     }
-  });
-};
+  },
 
-// read data from file
-lib.read = (dir, file, callback) => {
-  fs.readFile(`${lib.basedir + dir}/${file}.json`, 'utf8', (err, data) => {
-    callback(err, data);
-  });
-};
-
-// update existing file
-lib.update = (dir, file, data, callback) => {
-  // file open for writing
-  fs.open(`${lib.basedir + dir}/${file}.json`, 'r+', (err, fileDescriptor) => {
-    if (!err && fileDescriptor) {
-      // convert the data to string
-      const stringData = JSON.stringify(data);
-
-      // truncate the file
-      fs.ftruncate(fileDescriptor, (err1) => {
-        if (!err1) {
-          // write to the file and close it
-          fs.writeFile(fileDescriptor, stringData, (err2) => {
-            if (!err2) {
-              // close the file
-              fs.close(fileDescriptor, (err3) => {
-                if (!err3) {
-                  callback(false);
-                } else {
-                  callback('Error closing file!');
-                }
-              });
-            } else {
-              callback('Error writing to file!');
-            }
-          });
-        } else {
-          callback('Error truncating file!');
-        }
-      });
-    } else {
-      console.log(`Error updating. File may not exist`);
+  // Read file contents
+  async read(dir, file) {
+    const filePath = getFilePath(dir, file);
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      return content;
+    } catch (err) {
+      throw new Error(`Read failed: ${err.message}`);
     }
-  });
-};
+  },
 
-// delete existing file
-lib.delete = (dir, file, callback) => {
-  // unlink file
-  fs.unlink(`${lib.basedir + dir}/${file}.json`, (err) => {
-    if (!err) {
-      callback(false);
-    } else {
-      callback(`Error deleting file`);
+  // Update an existing file
+  async update(dir, file, data) {
+    const filePath = getFilePath(dir, file);
+    try {
+      const handle = await fs.open(filePath, 'r+');
+      await handle.truncate();
+      await handle.writeFile(JSON.stringify(data));
+      await handle.close();
+    } catch (err) {
+      throw new Error(`Update failed: ${err.message}`);
     }
-  });
-};
+  },
 
-// list all the items in a directory
-lib.list = (dir, callback) => {
-  fs.readdir(`${lib.basedir + dir}/`, (err, fileNames) => {
-    if (!err && fileNames && fileNames.length > 0) {
-      const trimmedFileNames = [];
-      fileNames.forEach((fileName) => {
-        trimmedFileNames.push(fileName.replace('.json', ''));
-      });
-      callback(false, trimmedFileNames);
-    } else {
-      callback('Error reading directory!');
+  // Delete a file
+  async delete(dir, file) {
+    const filePath = getFilePath(dir, file);
+    try {
+      await fs.unlink(filePath);
+    } catch (err) {
+      throw new Error(`Delete failed: ${err.message}`);
     }
-  });
+  },
+
+  // List all JSON files (without .json extension)
+  async list(dir) {
+    const directoryPath = path.join(baseDir, dir);
+    try {
+      const files = await fs.readdir(directoryPath);
+      return files
+        .filter((fileName) => fileName.endsWith('.json'))
+        .map((fileName) => fileName.replace('.json', ''));
+    } catch (err) {
+      throw new Error(`List failed: ${err.message}`);
+    }
+  },
 };
 
-module.exports = lib;
+export default fileLib;

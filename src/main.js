@@ -1,18 +1,19 @@
-// dependencies
-const server = require('./app/lib/server');
-const workers = require('./app/lib/worker');
+import { init as startServer } from './app/lib/server.js';
+import { init as startWorkers } from './app/lib/worker.js';
 
 // app object - module scaffolding
-const app = {};
+const app = {
+  init() {
+    // Start the server
+    startServer();
 
-app.init = () => {
-  // start the server
-  server.init();
-  // start the workers
-  workers.init();
+    // Start the workers
+    startWorkers();
+  },
 };
 
+// Initialize the app
 app.init();
 
-// export the app
-module.exports = app;
+// Export the app
+export default app;

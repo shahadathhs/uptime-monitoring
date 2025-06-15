@@ -1,16 +1,15 @@
 // dependencies
-const url = require('url');
-const { StringDecoder } = require('string_decoder');
-const routes = require('../../routes');
-const { notFoundHandler } = require('../handlers/notFoundHandler');
-const { parseJSON } = require('./utilities');
+import { StringDecoder } from 'string_decoder';
+import url from 'url';
+import routes from '../../routes.js';
+import { notFoundHandler } from './notFoundHandler.js';
+import { parseJSON } from './utilities.js';
 
-// modue scaffolding
-const handler = {};
+// module scaffolding
+const reqResHandler = {};
 
-handler.handleReqRes = (req, res) => {
-  // request handling
-  // get the url and parse it
+reqResHandler.handler = (req, res) => {
+  // parse url
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, '');
@@ -30,9 +29,7 @@ handler.handleReqRes = (req, res) => {
   const decoder = new StringDecoder('utf-8');
   let realData = '';
 
-  const chosenHandler = routes[trimmedPath]
-    ? routes[trimmedPath]
-    : notFoundHandler;
+  const chosenHandler = routes[trimmedPath] ?? notFoundHandler;
 
   req.on('data', (buffer) => {
     realData += decoder.write(buffer);
@@ -43,13 +40,9 @@ handler.handleReqRes = (req, res) => {
 
     requestProperties.body = parseJSON(realData);
 
-    chosenHandler(requestProperties, (statusCode, payload) => {
-      statusCode = typeof statusCode === 'number' ? statusCode : 500;
-      payload = typeof payload === 'object' ? payload : {};
-
+    chosenHandler(requestProperties, (statusCode = 500, payload = {}) => {
       const payloadString = JSON.stringify(payload);
 
-      // return the final response
       res.setHeader('Content-Type', 'application/json');
       res.writeHead(statusCode);
       res.end(payloadString);
@@ -57,4 +50,4 @@ handler.handleReqRes = (req, res) => {
   });
 };
 
-module.exports = handler;
+export default reqResHandler;
