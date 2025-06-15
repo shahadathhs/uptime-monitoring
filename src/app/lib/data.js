@@ -1,17 +1,17 @@
 // dependencies
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // module scaffolding
 const lib = {};
 
 // base directory of the data folder
-lib.basedir = path.join(__dirname, "/../.data/");
+lib.basedir = path.join(__dirname, '/../.data/');
 
 // write data to file
 lib.create = (dir, file, data, callback) => {
   // open file for writing
-  fs.open(`${lib.basedir + dir}/${file}.json`, "wx", (err, fileDescriptor) => {
+  fs.open(`${lib.basedir + dir}/${file}.json`, 'wx', (err, fileDescriptor) => {
     if (!err && fileDescriptor) {
       // convert data to stirng
       const stringData = JSON.stringify(data);
@@ -23,22 +23,22 @@ lib.create = (dir, file, data, callback) => {
             if (!err3) {
               callback(false);
             } else {
-              callback("Error closing the new file!");
+              callback('Error closing the new file!');
             }
           });
         } else {
-          callback("Error writing to new file!");
+          callback('Error writing to new file!');
         }
       });
     } else {
-      callback("There was an error, file may already exists!");
+      callback('There was an error, file may already exists!');
     }
   });
 };
 
 // read data from file
 lib.read = (dir, file, callback) => {
-  fs.readFile(`${lib.basedir + dir}/${file}.json`, "utf8", (err, data) => {
+  fs.readFile(`${lib.basedir + dir}/${file}.json`, 'utf8', (err, data) => {
     callback(err, data);
   });
 };
@@ -46,7 +46,7 @@ lib.read = (dir, file, callback) => {
 // update existing file
 lib.update = (dir, file, data, callback) => {
   // file open for writing
-  fs.open(`${lib.basedir + dir}/${file}.json`, "r+", (err, fileDescriptor) => {
+  fs.open(`${lib.basedir + dir}/${file}.json`, 'r+', (err, fileDescriptor) => {
     if (!err && fileDescriptor) {
       // convert the data to string
       const stringData = JSON.stringify(data);
@@ -62,15 +62,15 @@ lib.update = (dir, file, data, callback) => {
                 if (!err3) {
                   callback(false);
                 } else {
-                  callback("Error closing file!");
+                  callback('Error closing file!');
                 }
               });
             } else {
-              callback("Error writing to file!");
+              callback('Error writing to file!');
             }
           });
         } else {
-          callback("Error truncating file!");
+          callback('Error truncating file!');
         }
       });
     } else {
@@ -97,11 +97,11 @@ lib.list = (dir, callback) => {
     if (!err && fileNames && fileNames.length > 0) {
       const trimmedFileNames = [];
       fileNames.forEach((fileName) => {
-        trimmedFileNames.push(fileName.replace(".json", ""));
+        trimmedFileNames.push(fileName.replace('.json', ''));
       });
       callback(false, trimmedFileNames);
     } else {
-      callback("Error reading directory!");
+      callback('Error reading directory!');
     }
   });
 };

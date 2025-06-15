@@ -1,6 +1,6 @@
 // dependencies
-const http = require("http");
-const { handleReqRes } = require("../helpers/handleReqRes");
+const http = require('http');
+const { handleReqRes } = require('../helpers/handleReqRes');
 
 // server object - module scaffolding
 const server = {};

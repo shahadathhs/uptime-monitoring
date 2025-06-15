@@ -1,10 +1,10 @@
 // dependencies
-const url = require("url");
-const http = require("http");
-const https = require("https");
-const data = require("./data");
-const { parseJSON } = require("../helpers/utilities");
-const { sendTwilioSms } = require("../helpers/notifications");
+const url = require('url');
+const http = require('http');
+const https = require('https');
+const data = require('./data');
+const { parseJSON } = require('../helpers/utilities');
+const { sendTwilioSms } = require('../helpers/notifications');
 
 // worker object - module scaffolding
 const worker = {};
@@ -12,21 +12,21 @@ const worker = {};
 // lookup all the checks
 worker.gatherAllChecks = () => {
   // get all the checks
-  data.list("checks", (err1, checks) => {
+  data.list('checks', (err1, checks) => {
     if (!err1 && checks && checks.length > 0) {
       checks.forEach((check) => {
         // read the checkData
-        data.read("checks", check, (err2, originalCheckData) => {
+        data.read('checks', check, (err2, originalCheckData) => {
           if (!err2 && originalCheckData) {
             // pass the data to the check validator
             worker.validateCheckData(parseJSON(originalCheckData));
           } else {
-            console.log("Error: reading one of the checks data!");
+            console.log('Error: reading one of the checks data!');
           }
         });
       });
     } else {
-      console.log("Error: could not find any checks to process!");
+      console.log('Error: could not find any checks to process!');
     }
   });
 };
@@ -36,13 +36,13 @@ worker.validateCheckData = (originalCheckData) => {
   const originalData = originalCheckData;
   if (originalCheckData && originalCheckData.id) {
     originalData.state =
-      typeof originalCheckData.state === "string" &&
-      ["up", "down"].indexOf(originalCheckData.state) > -1
+      typeof originalCheckData.state === 'string' &&
+      ['up', 'down'].indexOf(originalCheckData.state) > -1
         ? originalCheckData.state
-        : "down";
+        : 'down';
 
     originalData.lastChecked =
-      typeof originalCheckData.lastChecked === "number" &&
+      typeof originalCheckData.lastChecked === 'number' &&
       originalCheckData.lastChecked > 0
         ? originalCheckData.lastChecked
         : false;
@@ -50,7 +50,7 @@ worker.validateCheckData = (originalCheckData) => {
     // pass to the next process
     worker.performCheck(originalData);
   } else {
-    console.log("Error: check was invalid or not properly formatted!");
+    console.log('Error: check was invalid or not properly formatted!');
   }
 };
 
@@ -67,7 +67,7 @@ worker.performCheck = (originalCheckData) => {
   // parse the hostname & full url from original data
   const parsedUrl = url.parse(
     `${originalCheckData.protocol}://${originalCheckData.url}`,
-    true
+    true,
   );
   const hostName = parsedUrl.hostname;
   const { path } = parsedUrl;
@@ -81,7 +81,7 @@ worker.performCheck = (originalCheckData) => {
     timeout: originalCheckData.timeoutSeconds * 1000,
   };
 
-  const protocolToUse = originalCheckData.protocol === "http" ? http : https;
+  const protocolToUse = originalCheckData.protocol === 'http' ? http : https;
 
   const req = protocolToUse.request(requestDetails, (res) => {
     // grab the status of the response
@@ -94,7 +94,7 @@ worker.performCheck = (originalCheckData) => {
     }
   });
 
-  req.on("error", (e) => {
+  req.on('error', (e) => {
     checkOutCome = {
       error: true,
       value: e,
@@ -106,10 +106,10 @@ worker.performCheck = (originalCheckData) => {
     }
   });
 
-  req.on("timeout", () => {
+  req.on('timeout', () => {
     checkOutCome = {
       error: true,
-      value: "timeout",
+      value: 'timeout',
     };
     // update the check outcome and pass to the next process
     if (!outcomeSent) {
@@ -129,8 +129,8 @@ worker.processCheckOutcome = (originalCheckData, checkOutCome) => {
     !checkOutCome.error &&
     checkOutCome.responseCode &&
     originalCheckData.successCodes.indexOf(checkOutCome.responseCode) > -1
-      ? "up"
-      : "down";
+      ? 'up'
+      : 'down';
 
   // decide whether we should alert the user or not
   const alertWanted = !!(
@@ -144,16 +144,16 @@ worker.processCheckOutcome = (originalCheckData, checkOutCome) => {
   newCheckData.lastChecked = Date.now();
 
   // update the check to disk
-  data.update("checks", newCheckData.id, newCheckData, (err) => {
+  data.update('checks', newCheckData.id, newCheckData, (err) => {
     if (!err) {
       if (alertWanted) {
         // send the checkdata to next process
         worker.alertUserToStatusChange(newCheckData);
       } else {
-        console.log("Alert is not needed as there is no state change!");
+        console.log('Alert is not needed as there is no state change!');
       }
     } else {
-      console.log("Error trying to save check data of one of the checks!");
+      console.log('Error trying to save check data of one of the checks!');
     }
   });
 };
@@ -168,7 +168,7 @@ worker.alertUserToStatusChange = (newCheckData) => {
     if (!err) {
       console.log(`User was alerted to a status change via SMS: ${msg}`);
     } else {
-      console.log("There was a problem sending sms to one of the user!");
+      console.log('There was a problem sending sms to one of the user!');
     }
   });
 };
