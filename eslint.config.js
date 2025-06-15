@@ -11,6 +11,36 @@ export default defineConfig([
     plugins: { js },
     extends: ['js/recommended'],
     rules: {
+      // ✅ Enforce ES6+ patterns
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-arrow-callback': 'error',
+      'prefer-template': 'error',
+      'object-shorthand': ['error', 'always'],
+      'prefer-destructuring': ['error', { array: true, object: true }],
+      'symbol-description': 'error',
+      'prefer-rest-params': 'error',
+      'prefer-spread': 'error',
+
+      // ✅ Disallow CommonJS
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='require']",
+          message: "Use ES6 'import' instead of 'require'.",
+        },
+        {
+          selector:
+            "MemberExpression[object.name='module'][property.name='exports']",
+          message: "Use ES6 'export' instead of 'module.exports'.",
+        },
+        {
+          selector: "AssignmentExpression[left.object.name='exports']",
+          message: "Use ES6 'export' instead of 'exports.*'.",
+        },
+      ],
+
+      // Additional helpful rules
       'no-console': [
         'warn',
         { allow: ['warn', 'error', 'info', 'group', 'groupEnd'] },
@@ -21,24 +51,16 @@ export default defineConfig([
   },
   {
     files: ['**/*.{js,mjs,cjs}'],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: { ...globals.browser, ...globals.node },
+    },
   },
   {
     files: ['**/*.json'],
     plugins: { json },
     language: 'json/json',
-    extends: ['json/recommended'],
-  },
-  {
-    files: ['**/*.jsonc'],
-    plugins: { json },
-    language: 'json/jsonc',
-    extends: ['json/recommended'],
-  },
-  {
-    files: ['**/*.json5'],
-    plugins: { json },
-    language: 'json/json5',
     extends: ['json/recommended'],
   },
   {
