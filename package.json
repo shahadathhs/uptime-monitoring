@@ -1,15 +1,16 @@
 {
-  "name": "raw-node-api-project",
+  "name": "uptime-monitoring-api-raw-node",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=staging nodemon src/main",
-    "start:dev": "NODE_ENV=production nodemon src/main",
-    "start:prod": "NODE_ENV=production node dist/main",
+    "dev": "node --watch src/main",
+    "start": "node src/main",
+    "start:prod": "node dist/main",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --ignore-path .gitignore --check \"**/*.+(js|ts|json)\"",
+    "format:fix": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,6 @@
     "@eslint/markdown": "^6.5.0",
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
-    "nodemon": "^3.1.10",
     "prettier": "^3.5.3"
   }
 }

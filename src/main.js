@@ -1,19 +1,15 @@
-import { init as startServer } from './app/lib/server.js';
-import { init as startWorkers } from './app/lib/worker.js';
+import http from 'http';
 
-// app object - module scaffolding
-const app = {
-  init() {
-    // Start the server
-    startServer();
+function main() {
+  const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Welcome to Uptime Monitoring API!  This is root endpoint.\n');
+  });
 
-    // Start the workers
-    startWorkers();
-  },
-};
+  const PORT = 3000;
+  server.listen(PORT, () => {
+    console.info(`Server running at http://localhost:${PORT}`);
+  });
+}
 
-// Initialize the app
-app.init();
-
-// Export the app
-export default app;
+main();

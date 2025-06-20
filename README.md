@@ -1,4 +1,4 @@
-# Raw Node.js Project - Uptime Monitoring API - Lesson 7
+# Raw Node.js Project - Uptime Monitoring API
 
 <!-- TABLE OF CONTENTS -->
 
@@ -24,4 +24,4 @@ Please follow the below instructions to run this project in your machine:
    ```sh
    npm start
    ```
-5. Your app should be available in http://localhost:3000
+4. Your app should be available in http://localhost:3000
