@@ -1,4 +1,4 @@
-import { jsonContent } from '../helpers/helper';
+import { jsonContent } from '#helpers/helper.js';
 
 export function sendSuccess(res, data, statusCode = 200) {
   res.writeHead(statusCode, jsonContent);
