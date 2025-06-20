@@ -11,7 +11,7 @@ export default defineConfig([
     plugins: { js },
     extends: ['js/recommended'],
     rules: {
-      // ✅ Enforce ES6+ patterns
+      // * Enforce ES6+ patterns
       'no-var': 'error',
       'prefer-const': 'error',
       'prefer-arrow-callback': 'error',
@@ -22,7 +22,7 @@ export default defineConfig([
       'prefer-rest-params': 'error',
       'prefer-spread': 'error',
 
-      // ✅ Disallow CommonJS
+      // * Disallow CommonJS
       'no-restricted-syntax': [
         'error',
         {
@@ -40,7 +40,7 @@ export default defineConfig([
         },
       ],
 
-      // Additional helpful rules
+      // * Additional helpful rules
       'no-console': [
         'warn',
         { allow: ['warn', 'error', 'info', 'group', 'groupEnd'] },

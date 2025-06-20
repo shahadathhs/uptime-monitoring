@@ -4,9 +4,8 @@
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "build": "build command",
     "dev": "node --watch src/main",
-    "start": "node dist/main",
+    "start": "node src/main",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --ignore-path .gitignore --check \"**/*.+(js|ts|json)\"",
@@ -26,6 +25,7 @@
   },
   "imports": {
     "#utils/*": "./src/utils/*",
-    "#helpers/*": "./src/helpers/*"
+    "#helpers/*": "./src/helpers/*",
+    "#middlewares/*": "./src/middlewares/*"
   }
 }
