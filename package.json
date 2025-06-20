@@ -1,12 +1,12 @@
 {
   "name": "uptime-monitoring-api-raw-node",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "src/main.js",
   "type": "module",
   "scripts": {
+    "build": "build command",
     "dev": "node --watch src/main",
-    "start": "node src/main",
-    "start:prod": "node dist/main",
+    "start": "node dist/main",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --ignore-path .gitignore --check \"**/*.+(js|ts|json)\"",
