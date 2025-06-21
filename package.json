@@ -1,5 +1,5 @@
 {
-  "name": "uptime-monitoring-api-raw-node",
+  "name": "uptime-monitoring",
   "version": "0.0.1",
   "main": "src/main.js",
   "type": "module",
