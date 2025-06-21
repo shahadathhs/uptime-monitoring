@@ -1,12 +1,4 @@
-# Raw Node.js Project - Uptime Monitoring API
-
-<!-- TABLE OF CONTENTS -->
-
-## Table of Contents
-
-- [How to run](#how-to-run)
-
-<!-- HOW TO RUN -->
+# Uptime Monitoring
 
 ## How to run
 
@@ -14,7 +6,7 @@ Please follow the below instructions to run this project in your machine:
 
 1. Clone this repository
    ```sh
-   git clone https://github.com/shahadathhs/uptime-monitoring-api-raw-node.git
+   git clone https://github.com/shahadathhs/uptime-monitoring.git
    ```
 2. Install dev dependencies
    ```sh
